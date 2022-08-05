@@ -1,13 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace SpaceOfMiniGames.WebApi.Models.ModelsDbo
+﻿namespace SpaceOfMiniGames.WebApi.Models.ModelsDbo
 {
-    [Table("UserRoles")]
-    public class UserRoleDbo
+    public class RoleRelationship
     {
-        public int Id { get; set; }
         public int UserId { get; set; }
-        public string RoleName { get; set; }
-        public UserDbo User { get; set; }
+        public virtual UserDbo User { get; set; }
+        public int RoleId { get; set; }
+        public virtual RoleDbo Role { get; set; }
     }
 }

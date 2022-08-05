@@ -7,7 +7,7 @@ namespace SpaceOfMiniGames.WebApi.Data
         private readonly IConfiguration configuration;
         private Credential db;
 
-        public string DbConnectionString => configuration.GetConnectionString("DbConection").Replace("@@uid", db.UserId).Replace("@@pass", db.Password);
+        public string DbConnectionString => configuration.GetConnectionString("DbConnection").Replace("@@uid", db.UserId).Replace("@@pass", db.Password);
         public string SecretKey => configuration.GetSection("SecretKey").Value;
 
         public int tokenLifeTime => Convert.ToInt32(configuration.GetSection("TokenLifeTime").Value);

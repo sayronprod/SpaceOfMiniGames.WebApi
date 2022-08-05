@@ -38,13 +38,14 @@ namespace SpaceOfMiniGames.WebApi
                     }
                 );
 
-            services.AddScoped<ISecureService, ISecureService>();
+            services.AddScoped<ISecureService, SecureService>();
             services.AddScoped<ITokenService, TokenService>();
 
             services.AddAutoMapper(typeof(AppMappingProfile));
 
             services.AddDbContext<ApplicationContext>(options =>
             {
+                options.UseLazyLoadingProxies();
                 options.UseSqlServer(connectionStrings.DbConnectionString);
             });
 
@@ -67,7 +68,7 @@ namespace SpaceOfMiniGames.WebApi
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ToDoWebApi", Version = "v1" });
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "SpaceOfMiniGamesWebApi", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Please enter a valid token",
@@ -90,7 +91,7 @@ namespace SpaceOfMiniGames.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ToDoWebApi V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SpaceOfMiniGamesWebApi V1");
                 c.RoutePrefix = "api";
                 c.DisplayRequestDuration();
             });

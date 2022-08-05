@@ -10,13 +10,13 @@ namespace SpaceOfMiniGames.WebApi.Services
     {
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
-        private readonly IRoleService roleService;
+        private readonly IRoleRepository roleRepository;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IRoleService roleService)
+        public UserService(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
-            this.roleService = roleService;
+            this.roleRepository = roleRepository;
         }
 
         public async Task<ICollection<User>> GetUsers()
@@ -93,32 +93,22 @@ namespace SpaceOfMiniGames.WebApi.Services
             return result;
         }
 
-        public async Task<bool> DeleteUserById(int id)
+        public async Task DeleteUserById(int id)
         {
-            bool result = false;
-
             var user = await userRepository.GetUserById(id);
             if (user is not null)
             {
                 await userRepository.DeleteUser(user);
-                result = true;
             }
-
-            return result;
         }
 
-        public async Task<bool> DeleteUserByLogin(string login)
+        public async Task DeleteUserByLogin(string login)
         {
-            bool result = false;
-
             var user = await userRepository.GetUserByLogin(login);
             if (user is not null)
             {
                 await userRepository.DeleteUser(user);
-                result = true;
             }
-
-            return result;
         }
 
         public async Task<bool> AuthorizeUser(string login, string password)
@@ -146,16 +136,12 @@ namespace SpaceOfMiniGames.WebApi.Services
             var user = await userRepository.GetUserById(id);
             if (user is not null)
             {
-                bool isExistsRole = await roleService.IsExistsRole(roleName);
-                if (isExistsRole)
+                var existsRole = await roleRepository.GetRoleByName(roleName);
+                if (existsRole != null)
                 {
                     if (!user.UserRoles.Any(x => x.RoleName == roleName))
                     {
-                        user.UserRoles.Add(new UserRoleDbo
-                        {
-                            RoleName = roleName,
-                            UserId = user.Id
-                        });
+                        user.UserRoles.Add(existsRole);
                         await userRepository.Update(user);
                     }
                     result = true;
@@ -181,16 +167,12 @@ namespace SpaceOfMiniGames.WebApi.Services
             var user = await userRepository.GetUserByLogin(login);
             if (user is not null)
             {
-                bool isExistsRole = await roleService.IsExistsRole(roleName);
-                if (isExistsRole)
+                var existsRole = await roleRepository.GetRoleByName(roleName);
+                if (existsRole != null)
                 {
                     if (!user.UserRoles.Any(x => x.RoleName == roleName))
                     {
-                        user.UserRoles.Add(new UserRoleDbo
-                        {
-                            RoleName = roleName,
-                            UserId = user.Id
-                        });
+                        user.UserRoles.Add(existsRole);
                         await userRepository.Update(user);
                     }
                     result = true;

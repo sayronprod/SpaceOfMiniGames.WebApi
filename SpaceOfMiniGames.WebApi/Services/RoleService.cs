@@ -17,9 +17,8 @@ namespace SpaceOfMiniGames.WebApi.Services
             return roles.Select(x => x.RoleName).ToList();
         }
 
-        public async Task<bool> AddRole(string roleName)
+        public async Task AddRole(string roleName)
         {
-            bool result = false;
             var existRole = await roleRepository.GetRoleByName(roleName);
             if (existRole is null)
             {
@@ -29,20 +28,15 @@ namespace SpaceOfMiniGames.WebApi.Services
                 };
                 await roleRepository.AddRole(newRole);
             }
-            result = true;
-            return result;
         }
 
-        public async Task<bool> DeleteRole(string roleName)
+        public async Task DeleteRole(string roleName)
         {
-            bool result = false;
             var existRole = await roleRepository.GetRoleByName(roleName);
             if (existRole is not null)
             {
                 await roleRepository.DeleteRole(existRole);
             }
-            result = true;
-            return result;
         }
 
         public async Task<bool> IsExistsRole(string roleName)

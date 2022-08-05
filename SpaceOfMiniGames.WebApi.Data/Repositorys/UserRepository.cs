@@ -15,17 +15,17 @@ namespace SpaceOfMiniGames.WebApi.Data.Repositorys
 
         public async Task<ICollection<UserDbo>> GetUsers()
         {
-            return await context.Users.Include(x => x.UserRoles).ToListAsync();
+            return await context.Users.ToListAsync();
         }
 
         public async Task<UserDbo> GetUserById(int id)
         {
-            return await context.Users.Include(x => x.UserRoles).FirstOrDefaultAsync(x => x.Id == id);
+            return await context.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<UserDbo> GetUserByLogin(string login)
         {
-            return await context.Users.Include(x => x.UserRoles).FirstOrDefaultAsync(x => x.Login == login);
+            return await context.Users.FirstOrDefaultAsync(x => x.Login == login);
         }
 
         public async Task<UserDbo> Add(UserDbo newUser)
