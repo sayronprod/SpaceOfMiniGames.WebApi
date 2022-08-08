@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SpaceOfMiniGames.WebApi.Domain;
 using SpaceOfMiniGames.WebApi.Models;
+using SpaceOfMiniGames.WebApi.Models.Enums;
 using SpaceOfMiniGames.WebApi.Models.Interfaces;
 using SpaceOfMiniGames.WebApi.Models.ModelsDbo;
 
@@ -59,11 +60,15 @@ namespace SpaceOfMiniGames.WebApi.Services
 
             if (existUser is null)
             {
+                var userRoles = new List<RoleDbo>();
+                var playerRole = await roleRepository.GetRoleByName(Roles.Player.ToString());
+                userRoles.Add(playerRole);
                 UserDbo newUser = new UserDbo
                 {
                     Login = login,
                     PasswordHash = HashHelper.GetHash(password),
-                    RegistrationDate = DateTime.Now
+                    RegistrationDate = DateTime.Now,
+                    UserRoles = userRoles
                 };
                 var createdResult = await userRepository.Add(newUser);
 
