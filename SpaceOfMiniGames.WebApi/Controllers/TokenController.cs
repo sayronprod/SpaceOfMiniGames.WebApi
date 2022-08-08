@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SpaceOfMiniGames.WebApi.Models;
 using SpaceOfMiniGames.WebApi.Models.Interfaces;
 using SpaceOfMiniGames.WebApi.Models.ModelsDto.TokenController;
 
@@ -29,8 +30,10 @@ namespace SpaceOfMiniGames.WebApi.Controllers
             if (authResult)
             {
                 (string, DateTime) tokenResult = tokenService.GetToken(request.Login);
+                User user = await userService.GetUserByLogin(request.Login);
                 response.Token = tokenResult.Item1;
                 response.Expired = tokenResult.Item2;
+                response.UserInfo = user;
                 response.SetSuccess();
             }
             else
