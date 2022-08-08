@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SpaceOfMiniGames.WebApi.Models;
 using SpaceOfMiniGames.WebApi.Models.Interfaces;
-using SpaceOfMiniGames.WebApi.Models.ModelsDto;
+using SpaceOfMiniGames.WebApi.Models.ModelsDto.UserController;
 
 namespace SpaceOfMiniGames.WebApi.Controllers
 {
@@ -22,246 +22,164 @@ namespace SpaceOfMiniGames.WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [ProducesResponseType(201, Type = typeof(MessageDto))]
-        [ProducesResponseType(400, Type = typeof(MessageDto))]
-        public async Task<object> Register(RegisterRequestDto request)
+        public async Task<RegisterResponse> Register(RegisterRequest request)
         {
-            object result;
             User createdUser = await userService.CreateUser(request.Login, request.Password);
+
+            RegisterResponse response = new RegisterResponse();
+
             if (createdUser is null)
             {
-                result = new MessageDto
-                {
-                    Message = $"User with login {request.Login} already exist"
-                };
-                SetStatusCode(400);
+                response.SetFail($"User with login {request.Login} already exist");
             }
             else
             {
-                result = new MessageDto
-                {
-                    Message = "Success"
-                };
-                SetStatusCode(201);
+                response.SetSuccess();
             }
-            return result;
+
+            return response;
         }
 
         [AllowAnonymous]
         [HttpPost]
-        [ProducesResponseType(200, Type = typeof(MessageDto))]
-        [ProducesResponseType(400, Type = typeof(MessageDto))]
-        public async Task<object> UpdatePassword(UpdatePasswordRequestDto request)
+        public async Task<UpdatePasswordResponse> UpdatePassword(UpdatePasswordRequest request)
         {
-            object result;
             bool updatedResult = await userService.UpdateUserPassword(request.Login, request.OldPassword, request.NewPassword);
+
+            UpdatePasswordResponse response = new UpdatePasswordResponse();
+
             if (!updatedResult)
             {
-                result = new MessageDto
-                {
-                    Message = "Error password update"
-                };
-                SetStatusCode(400);
+                response.SetFail("Error password update");
             }
             else
             {
-                result = new MessageDto
-                {
-                    Message = "Success"
-                };
-                SetStatusCode(200);
+                response.SetSuccess();
             }
-            return result;
+
+            return response;
         }
 
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(ICollection<User>))]
-        public async Task<ICollection<User>> GetUsers()
+        [HttpPost]
+        public async Task<GetUsersResponse> GetUsers()
         {
             var users = await userService.GetUsers();
-            return users;
+
+            GetUsersResponse response = new GetUsersResponse();
+            response.Users = users;
+            response.SetSuccess();
+
+            return response;
         }
 
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(User))]
-        [ProducesResponseType(404, Type = typeof(MessageDto))]
-        public async Task<object> GetUserById(int id)
+        [HttpPost]
+        public async Task<GetUserByIdResponse> GetUserById(GetUserByIdRequest request)
         {
-            object result;
-            var user = await userService.GetUserById(id);
+            var user = await userService.GetUserById(request.Id);
+
+            GetUserByIdResponse response = new GetUserByIdResponse();
+
             if (user is null)
             {
-                result = new MessageDto
-                {
-                    Message = "User not found"
-                };
-                SetStatusCode(404);
+                response.SetFail("User not found");
             }
             else
             {
-                result = user;
-                SetStatusCode(200);
+                response.User = user;
+                response.SetSuccess();
             }
-            return result;
+
+            return response;
         }
 
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(User))]
-        [ProducesResponseType(404, Type = typeof(MessageDto))]
-        public async Task<object> GetUserByLogin(string login)
+        [HttpPost]
+        public async Task<GetUserByLoginResponse> GetUserByLogin(GetUserByLoginRequest request)
         {
-            object result;
-            var user = await userService.GetUserByLogin(login);
+            var user = await userService.GetUserByLogin(request.Login);
+
+            GetUserByLoginResponse response = new GetUserByLoginResponse();
+
             if (user is null)
             {
-                result = new MessageDto
-                {
-                    Message = "User not found"
-                };
-                SetStatusCode(404);
+                response.SetFail("User not found");
             }
             else
             {
-                result = user;
-                SetStatusCode(200);
+                response.User = user;
+                response.SetSuccess();
             }
-            return result;
+
+            return response;
         }
 
-        [HttpDelete]
-        [ProducesResponseType(200, Type = typeof(MessageDto))]
-        public async Task<object> DeleteUserById(int id)
+        [HttpPost]
+        public async Task<DeleteUserByIdResponse> DeleteUserById(DeleteUserByIdRequest request)
         {
-            object result;
-            await userService.DeleteUserById(id);
+            await userService.DeleteUserById(request.Id);
 
-            result = new MessageDto
-            {
-                Message = "Success"
-            };
-            SetStatusCode(200);
+            DeleteUserByIdResponse response = new DeleteUserByIdResponse();
+            response.SetSuccess();
 
-            return result;
+            return response;
         }
 
-        [HttpDelete]
-        [ProducesResponseType(200, Type = typeof(MessageDto))]
-        public async Task<object> DeleteUserByLogin(string login)
+        [HttpPost]
+        public async Task<DeleteUserByLoginResponse> DeleteUserByLogin(DeleteUserByLoginRequest request)
         {
-            object result;
-            await userService.DeleteUserByLogin(login);
+            await userService.DeleteUserByLogin(request.Login);
 
-            result = new MessageDto
-            {
-                Message = "Success"
-            };
-            SetStatusCode(200);
+            DeleteUserByLoginResponse response = new DeleteUserByLoginResponse();
+            response.SetSuccess();
 
-            return result;
+            return response;
         }
 
-        [HttpPut]
-        [ProducesResponseType(200, Type = typeof(MessageDto))]
-        [ProducesResponseType(400, Type = typeof(MessageDto))]
-        public async Task<object> GrantRoleToUserById(GrantRoleToUserByIdRequestDto request)
+        [HttpPost]
+        public async Task<GrantRoleToUserByIdResponse> GrantRoleToUserById(GrantRoleToUserByIdRequest request)
         {
-            object result;
             (bool, string) grantResult = await userService.GrantRoleToUserById(request.UserId, request.RoleName);
-            if (!grantResult.Item1)
-            {
-                result = new MessageDto
-                {
-                    Message = grantResult.Item2
-                };
-                SetStatusCode(400);
-            }
-            else
-            {
-                result = new MessageDto
-                {
-                    Message = "Success"
-                };
-                SetStatusCode(200);
-            }
-            return result;
+
+            GrantRoleToUserByIdResponse response = new GrantRoleToUserByIdResponse();
+            response.IsSuccess = grantResult.Item1;
+            response.Message = grantResult.Item2;
+
+            return response;
         }
 
-        [HttpPut]
-        [ProducesResponseType(200, Type = typeof(MessageDto))]
-        [ProducesResponseType(400, Type = typeof(MessageDto))]
-        public async Task<object> GrantRoleToUserByLogin(GrantRoleToUserByLoginRequestDto request)
+        [HttpPost]
+        public async Task<GrantRoleToUserByLoginResponse> GrantRoleToUserByLogin(GrantRoleToUserByLoginRequest request)
         {
-            object result;
             (bool, string) grantResult = await userService.GrantRoleToUserByLogin(request.UserLogin, request.RoleName);
-            if (!grantResult.Item1)
-            {
-                result = new MessageDto
-                {
-                    Message = grantResult.Item2
-                };
-                SetStatusCode(400);
-            }
-            else
-            {
-                result = new MessageDto
-                {
-                    Message = "Success"
-                };
-                SetStatusCode(200);
-            }
-            return result;
+
+            GrantRoleToUserByLoginResponse response = new GrantRoleToUserByLoginResponse();
+            response.IsSuccess = grantResult.Item1;
+            response.Message = grantResult.Item2;
+
+            return response;
         }
 
-        [HttpDelete]
-        [ProducesResponseType(200, Type = typeof(MessageDto))]
-        [ProducesResponseType(400, Type = typeof(MessageDto))]
-        public async Task<object> DeleteRoleInUserById(DeleteRoleInUserByIdRequestDto request)
+        [HttpPost]
+        public async Task<DeleteRoleInUserByIdResponse> DeleteRoleInUserById(DeleteRoleInUserByIdRequest request)
         {
-            object result;
             bool deleteResult = await userService.DeleteRoleInUserById(request.UserId, request.RoleName);
-            if (!deleteResult)
-            {
-                result = new MessageDto
-                {
-                    Message = "Error"
-                };
-                SetStatusCode(400);
-            }
-            else
-            {
-                result = new MessageDto
-                {
-                    Message = "Success"
-                };
-                SetStatusCode(200);
-            }
-            return result;
+
+            DeleteRoleInUserByIdResponse response = new DeleteRoleInUserByIdResponse();
+            response.IsSuccess = deleteResult;
+            response.Message = "";
+
+            return response;
         }
 
-        [HttpDelete]
-        [ProducesResponseType(200, Type = typeof(MessageDto))]
-        [ProducesResponseType(400, Type = typeof(MessageDto))]
-        public async Task<object> DeleteRoleInUserByLogin(DeleteRoleInUserByLoginRequestDto request)
+        [HttpPost]
+        public async Task<DeleteRoleInUserByLoginResponse> DeleteRoleInUserByLogin(DeleteRoleInUserByLoginRequest request)
         {
-            object result;
             bool deleteResult = await userService.DeleteRoleInUserByLogin(request.UserLogin, request.RoleName);
-            if (!deleteResult)
-            {
-                result = new MessageDto
-                {
-                    Message = "Error"
-                };
-                SetStatusCode(400);
-            }
-            else
-            {
-                result = new MessageDto
-                {
-                    Message = "Success"
-                };
-                SetStatusCode(200);
-            }
-            return result;
+
+            DeleteRoleInUserByLoginResponse response = new DeleteRoleInUserByLoginResponse();
+            response.IsSuccess = deleteResult;
+            response.Message = "";
+
+            return response;
         }
     }
 }

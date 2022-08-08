@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.EntityFrameworkCore;
@@ -97,6 +98,10 @@ namespace SpaceOfMiniGames.WebApi
             });
 
             app.UseRouting();
+
+            app.UseCors(x => x.AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowAnyOrigin());
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SpaceOfMiniGames.WebApi.Models.ModelsDto
+namespace SpaceOfMiniGames.WebApi.Models.ModelsDto.UserController
 {
-    public class TokenRequestDto
+    public class RegisterRequest
     {
         [Required]
         [StringLength(50, MinimumLength = 1)]
@@ -10,5 +10,9 @@ namespace SpaceOfMiniGames.WebApi.Models.ModelsDto
         [Required]
         [StringLength(50, MinimumLength = 1)]
         public string Password { get; set; }
+    }
+
+    public class RegisterResponse : BaseResponse
+    {
     }
 }

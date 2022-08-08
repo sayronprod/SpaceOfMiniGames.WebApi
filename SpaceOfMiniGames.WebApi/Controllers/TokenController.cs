@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SpaceOfMiniGames.WebApi.Models.Interfaces;
-using SpaceOfMiniGames.WebApi.Models.ModelsDto;
+using SpaceOfMiniGames.WebApi.Models.ModelsDto.TokenController;
 
 namespace SpaceOfMiniGames.WebApi.Controllers
 {
@@ -20,33 +20,25 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(200, Type = typeof(TokenResponseDto))]
-        [ProducesResponseType(400, Type = typeof(MessageDto))]
-        public async Task<object> Token(TokenRequestDto request)
+        public async Task<TokenResponse> Token(TokenRequest request)
         {
-            object result;
             bool authResult = await userService.AuthorizeUser(request.Login, request.Password);
+
+            TokenResponse response = new TokenResponse();
 
             if (authResult)
             {
                 (string, DateTime) tokenResult = tokenService.GetToken(request.Login);
-                result = new TokenResponseDto
-                {
-                    Token = tokenResult.Item1,
-                    Expired = tokenResult.Item2
-                };
-                SetStatusCode(200);
+                response.Token = tokenResult.Item1;
+                response.Expired = tokenResult.Item2;
+                response.SetSuccess();
             }
             else
             {
-                result = new MessageDto
-                {
-                    Message = "Incorrect authorization data"
-                };
-                SetStatusCode(400);
+                response.SetFail("Incorrect authorization data");
             }
 
-            return result;
+            return response;
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SpaceOfMiniGames.WebApi.Models.ModelsDto
+namespace SpaceOfMiniGames.WebApi.Models.ModelsDto.UserController
 {
-    public class UpdatePasswordRequestDto
+    public class UpdatePasswordRequest
     {
         [Required]
         [StringLength(50, MinimumLength = 1)]
@@ -13,5 +13,9 @@ namespace SpaceOfMiniGames.WebApi.Models.ModelsDto
         [Required]
         [StringLength(50, MinimumLength = 1)]
         public string NewPassword { get; set; }
+    }
+
+    public class UpdatePasswordResponse : BaseResponse
+    {
     }
 }

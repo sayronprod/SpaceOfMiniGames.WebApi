@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SpaceOfMiniGames.WebApi.Models.ModelsDto
+namespace SpaceOfMiniGames.WebApi.Models.ModelsDto.UserController
 {
-    public class DeleteRoleInUserByLoginRequestDto
+    public class DeleteRoleInUserByLoginRequest
     {
         [Required]
         [StringLength(50, MinimumLength = 1)]
@@ -10,5 +10,10 @@ namespace SpaceOfMiniGames.WebApi.Models.ModelsDto
         [Required]
         [StringLength(30, MinimumLength = 1)]
         public string RoleName { get; set; }
+    }
+
+    public class DeleteRoleInUserByLoginResponse : BaseResponse
+    {
+
     }
 }

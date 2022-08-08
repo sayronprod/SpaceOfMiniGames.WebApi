@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpaceOfMiniGames.WebApi.Models.Interfaces;
-using SpaceOfMiniGames.WebApi.Models.ModelsDto;
+using SpaceOfMiniGames.WebApi.Models.ModelsDto.RoleController;
 
 namespace SpaceOfMiniGames.WebApi.Controllers
 {
@@ -19,44 +19,38 @@ namespace SpaceOfMiniGames.WebApi.Controllers
             this.roleService = roleService;
         }
 
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(ICollection<string>))]
-        public async Task<ICollection<string>> GetRoles()
+        [HttpPost]
+        public async Task<GetRolesResponse> GetRoles()
         {
-            ICollection<string>? roles = await roleService.GetRoles();
-            return roles;
+            ICollection<string> roles = await roleService.GetRoles();
+
+            GetRolesResponse response = new GetRolesResponse();
+            response.Roles = roles;
+            response.SetSuccess();
+
+            return response;
         }
 
-        [HttpPut]
-        [ProducesResponseType(200, Type = typeof(MessageDto))]
-        public async Task<object> AddRole(AddRoleRequestDto request)
+        [HttpPost]
+        public async Task<AddRoleResponse> AddRole(AddRoleRequest request)
         {
-            object result;
             await roleService.AddRole(request.RoleName);
 
-            result = new MessageDto
-            {
-                Message = "Success"
-            };
-            SetStatusCode(200);
+            AddRoleResponse response = new AddRoleResponse();
+            response.SetSuccess();
 
-            return result;
+            return response;
         }
 
-        [HttpDelete]
-        [ProducesResponseType(200, Type = typeof(MessageDto))]
-        public async Task<object> DeleteRole(DeleteRoleRequestDto request)
+        [HttpPost]
+        public async Task<DeleteRoleResponse> DeleteRole(DeleteRoleRequest request)
         {
-            object result;
             await roleService.DeleteRole(request.RoleName);
 
-            result = new MessageDto
-            {
-                Message = "Success"
-            };
-            SetStatusCode(200);
+            DeleteRoleResponse response = new DeleteRoleResponse();
+            response.SetSuccess();
 
-            return result;
+            return response;
         }
     }
 }
