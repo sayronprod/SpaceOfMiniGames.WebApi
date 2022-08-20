@@ -3,18 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceOfMiniGames.WebApi", ".\SpaceOfMiniGames.WebApi\SpaceOfMiniGames.WebApi.csproj", "{ECD6F7AA-E496-4B33-86BC-6D3EFCDF2584}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceOfMiniGames.WebApi", "SpaceOfMiniGames.WebApi\SpaceOfMiniGames.WebApi.csproj", "{ECD6F7AA-E496-4B33-86BC-6D3EFCDF2584}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceOfMiniGames.WebApi.Data", ".\SpaceOfMiniGames.WebApi.Data\SpaceOfMiniGames.WebApi.Data.csproj", "{C9B4C013-3F8F-4018-B4C7-8B7F34184478}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceOfMiniGames.WebApi.Data", "SpaceOfMiniGames.WebApi.Data\SpaceOfMiniGames.WebApi.Data.csproj", "{C9B4C013-3F8F-4018-B4C7-8B7F34184478}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOfMiniGames.WebApi.Models", ".\SpaceOfMiniGames.WebApi.Models\SpaceOfMiniGames.WebApi.Models.csproj", "{B82FD303-74B4-43CB-A56F-DE2A0753C902}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceOfMiniGames.WebApi.Models", "SpaceOfMiniGames.WebApi.Models\SpaceOfMiniGames.WebApi.Models.csproj", "{B82FD303-74B4-43CB-A56F-DE2A0753C902}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOfMiniGames.WebApi.Domain", ".\SpaceOfMiniGames.WebApi.Domain\SpaceOfMiniGames.WebApi.Domain.csproj", "{AC32AC6D-A728-4582-8A72-1CFDAFE26356}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceOfMiniGames.WebApi.Domain", "SpaceOfMiniGames.WebApi.Domain\SpaceOfMiniGames.WebApi.Domain.csproj", "{AC32AC6D-A728-4582-8A72-1CFDAFE26356}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B7E2EE9E-0618-462A-96A0-59B2F2EEC7E3}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceOfMiniGames.WebApi.IntegrationTests", "SpaceOfMiniGames.WebApi.IntegrationTests\SpaceOfMiniGames.WebApi.IntegrationTests.csproj", "{01C87FE5-1347-4986-9D2F-8BE9597602FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOfMiniGames.WebApi.Tests", "SpaceOfMiniGames.WebApi.Tests\SpaceOfMiniGames.WebApi.Tests.csproj", "{E69CF194-ECB2-4677-AAF1-E7568E4A9DBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +42,14 @@ Global
 		{AC32AC6D-A728-4582-8A72-1CFDAFE26356}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC32AC6D-A728-4582-8A72-1CFDAFE26356}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC32AC6D-A728-4582-8A72-1CFDAFE26356}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01C87FE5-1347-4986-9D2F-8BE9597602FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01C87FE5-1347-4986-9D2F-8BE9597602FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01C87FE5-1347-4986-9D2F-8BE9597602FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01C87FE5-1347-4986-9D2F-8BE9597602FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E69CF194-ECB2-4677-AAF1-E7568E4A9DBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E69CF194-ECB2-4677-AAF1-E7568E4A9DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E69CF194-ECB2-4677-AAF1-E7568E4A9DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E69CF194-ECB2-4677-AAF1-E7568E4A9DBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

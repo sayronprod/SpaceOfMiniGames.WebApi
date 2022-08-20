@@ -6,26 +6,21 @@ namespace SpaceOfMiniGames.WebApi.Services
 {
     public class SecureService : ISecureService
     {
-        private readonly IDataProtectionProvider _dataProtectionProvider;
-        private readonly ApplicationSettings applicationSettings;
-        private string Key => applicationSettings.SecretKey;
+        private readonly IDataProtector _dataProtector;
 
         public SecureService(IDataProtectionProvider dataProtectionProvider, ApplicationSettings applicationSettings)
         {
-            _dataProtectionProvider = dataProtectionProvider;
-            this.applicationSettings = applicationSettings;
+            _dataProtector = dataProtectionProvider.CreateProtector(applicationSettings.SecretKey);
         }
 
         public string Encrypt(string input)
         {
-            var protector = _dataProtectionProvider.CreateProtector(Key);
-            return protector.Protect(input);
+            return _dataProtector.Protect(input);
         }
 
         public string Decrypt(string cipherText)
         {
-            var protector = _dataProtectionProvider.CreateProtector(Key);
-            return protector.Unprotect(cipherText);
+            return _dataProtector.Unprotect(cipherText);
         }
     }
 }
