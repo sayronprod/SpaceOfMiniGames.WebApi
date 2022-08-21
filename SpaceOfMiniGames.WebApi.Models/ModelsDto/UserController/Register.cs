@@ -14,5 +14,8 @@ namespace SpaceOfMiniGames.WebApi.Models.ModelsDto.UserController
 
     public class RegisterResponse : BaseResponse
     {
+        public string Token { get; set; }
+        public DateTime? Expired { get; set; }
+        public User UserInfo { get; set; }
     }
 }

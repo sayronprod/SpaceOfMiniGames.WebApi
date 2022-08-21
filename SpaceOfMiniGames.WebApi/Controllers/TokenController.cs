@@ -9,28 +9,26 @@ namespace SpaceOfMiniGames.WebApi.Controllers
     [Route("api/[controller]")]
     public class TokenController : BaseApiController
     {
-        private readonly ILogger<TokenController> logger;
-        private readonly IUserService userService;
-        private readonly ITokenService tokenService;
+        private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
 
-        public TokenController(ILogger<TokenController> logger, IUserService userService, ITokenService tokenService)
+        public TokenController(IUserService userService, ITokenService tokenService)
         {
-            this.logger = logger;
-            this.userService = userService;
-            this.tokenService = tokenService;
+            _userService = userService;
+            _tokenService = tokenService;
         }
 
         [HttpPost]
         public async Task<TokenResponse> Token(TokenRequest request)
         {
-            bool authResult = await userService.AuthorizeUser(request.Login, request.Password);
+            bool authResult = await _userService.AuthorizeUser(request.Login, request.Password);
 
             TokenResponse response = new TokenResponse();
 
             if (authResult)
             {
-                (string, DateTime) tokenResult = tokenService.GetToken(request.Login);
-                User user = await userService.GetUserByLogin(request.Login);
+                (string, DateTime) tokenResult = _tokenService.GetToken(request.Login);
+                User user = await _userService.GetUserByLogin(request.Login);
                 response.Token = tokenResult.Item1;
                 response.Expired = tokenResult.Item2;
                 response.UserInfo = user;

@@ -10,19 +10,17 @@ namespace SpaceOfMiniGames.WebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class RoleController : BaseApiController
     {
-        private readonly ILogger<UserController> logger;
-        private readonly IRoleService roleService;
+        private readonly IRoleService _roleService;
 
-        public RoleController(ILogger<UserController> logger, IRoleService roleService)
+        public RoleController(IRoleService roleService)
         {
-            this.logger = logger;
-            this.roleService = roleService;
+            _roleService = roleService;
         }
 
         [HttpPost]
         public async Task<GetRolesResponse> GetRoles()
         {
-            ICollection<string> roles = await roleService.GetRoles();
+            ICollection<string> roles = await _roleService.GetRoles();
 
             GetRolesResponse response = new GetRolesResponse();
             response.Roles = roles;
@@ -34,7 +32,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<AddRoleResponse> AddRole(AddRoleRequest request)
         {
-            await roleService.AddRole(request.RoleName);
+            await _roleService.AddRole(request.RoleName);
 
             AddRoleResponse response = new AddRoleResponse();
             response.SetSuccess();
@@ -45,7 +43,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<DeleteRoleResponse> DeleteRole(DeleteRoleRequest request)
         {
-            await roleService.DeleteRole(request.RoleName);
+            await _roleService.DeleteRole(request.RoleName);
 
             DeleteRoleResponse response = new DeleteRoleResponse();
             response.SetSuccess();

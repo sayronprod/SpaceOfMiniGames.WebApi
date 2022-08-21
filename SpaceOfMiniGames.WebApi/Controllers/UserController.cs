@@ -11,20 +11,20 @@ namespace SpaceOfMiniGames.WebApi.Controllers
     [Route("api/[controller]/[action]")]
     public class UserController : BaseApiController
     {
-        private readonly ILogger<UserController> logger;
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
 
-        public UserController(ILogger<UserController> logger, IUserService userService)
+        public UserController(IUserService userService, ITokenService tokenService)
         {
-            this.logger = logger;
-            this.userService = userService;
+            _userService = userService;
+            _tokenService = tokenService;
         }
 
         [AllowAnonymous]
         [HttpPost]
         public async Task<RegisterResponse> Register(RegisterRequest request)
         {
-            User createdUser = await userService.CreateUser(request.Login, request.Password);
+            User createdUser = await _userService.CreateUser(request.Login, request.Password);
 
             RegisterResponse response = new RegisterResponse();
 
@@ -34,6 +34,10 @@ namespace SpaceOfMiniGames.WebApi.Controllers
             }
             else
             {
+                (string, DateTime) tokenResult = _tokenService.GetToken(request.Login);
+                response.Token = tokenResult.Item1;
+                response.Expired = tokenResult.Item2;
+                response.UserInfo = createdUser;
                 response.SetSuccess();
             }
 
@@ -44,7 +48,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<UpdatePasswordResponse> UpdatePassword(UpdatePasswordRequest request)
         {
-            bool updatedResult = await userService.UpdateUserPassword(request.Login, request.OldPassword, request.NewPassword);
+            bool updatedResult = await _userService.UpdateUserPassword(request.Login, request.OldPassword, request.NewPassword);
 
             UpdatePasswordResponse response = new UpdatePasswordResponse();
 
@@ -63,7 +67,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<GetUsersResponse> GetUsers()
         {
-            var users = await userService.GetUsers();
+            var users = await _userService.GetUsers();
 
             GetUsersResponse response = new GetUsersResponse();
             response.Users = users;
@@ -75,7 +79,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<GetUserByIdResponse> GetUserById(GetUserByIdRequest request)
         {
-            var user = await userService.GetUserById(request.Id);
+            var user = await _userService.GetUserById(request.Id);
 
             GetUserByIdResponse response = new GetUserByIdResponse();
 
@@ -95,7 +99,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<GetUserByLoginResponse> GetUserByLogin(GetUserByLoginRequest request)
         {
-            var user = await userService.GetUserByLogin(request.Login);
+            var user = await _userService.GetUserByLogin(request.Login);
 
             GetUserByLoginResponse response = new GetUserByLoginResponse();
 
@@ -115,7 +119,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<DeleteUserByIdResponse> DeleteUserById(DeleteUserByIdRequest request)
         {
-            await userService.DeleteUserById(request.Id);
+            await _userService.DeleteUserById(request.Id);
 
             DeleteUserByIdResponse response = new DeleteUserByIdResponse();
             response.SetSuccess();
@@ -126,7 +130,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<DeleteUserByLoginResponse> DeleteUserByLogin(DeleteUserByLoginRequest request)
         {
-            await userService.DeleteUserByLogin(request.Login);
+            await _userService.DeleteUserByLogin(request.Login);
 
             DeleteUserByLoginResponse response = new DeleteUserByLoginResponse();
             response.SetSuccess();
@@ -137,7 +141,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<GrantRoleToUserByIdResponse> GrantRoleToUserById(GrantRoleToUserByIdRequest request)
         {
-            (bool, string) grantResult = await userService.GrantRoleToUserById(request.UserId, request.RoleName);
+            (bool, string) grantResult = await _userService.GrantRoleToUserById(request.UserId, request.RoleName);
 
             GrantRoleToUserByIdResponse response = new GrantRoleToUserByIdResponse();
             response.IsSuccess = grantResult.Item1;
@@ -149,7 +153,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<GrantRoleToUserByLoginResponse> GrantRoleToUserByLogin(GrantRoleToUserByLoginRequest request)
         {
-            (bool, string) grantResult = await userService.GrantRoleToUserByLogin(request.UserLogin, request.RoleName);
+            (bool, string) grantResult = await _userService.GrantRoleToUserByLogin(request.UserLogin, request.RoleName);
 
             GrantRoleToUserByLoginResponse response = new GrantRoleToUserByLoginResponse();
             response.IsSuccess = grantResult.Item1;
@@ -161,7 +165,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<DeleteRoleInUserByIdResponse> DeleteRoleInUserById(DeleteRoleInUserByIdRequest request)
         {
-            bool deleteResult = await userService.DeleteRoleInUserById(request.UserId, request.RoleName);
+            bool deleteResult = await _userService.DeleteRoleInUserById(request.UserId, request.RoleName);
 
             DeleteRoleInUserByIdResponse response = new DeleteRoleInUserByIdResponse();
             response.IsSuccess = deleteResult;
@@ -173,7 +177,7 @@ namespace SpaceOfMiniGames.WebApi.Controllers
         [HttpPost]
         public async Task<DeleteRoleInUserByLoginResponse> DeleteRoleInUserByLogin(DeleteRoleInUserByLoginRequest request)
         {
-            bool deleteResult = await userService.DeleteRoleInUserByLogin(request.UserLogin, request.RoleName);
+            bool deleteResult = await _userService.DeleteRoleInUserByLogin(request.UserLogin, request.RoleName);
 
             DeleteRoleInUserByLoginResponse response = new DeleteRoleInUserByLoginResponse();
             response.IsSuccess = deleteResult;
