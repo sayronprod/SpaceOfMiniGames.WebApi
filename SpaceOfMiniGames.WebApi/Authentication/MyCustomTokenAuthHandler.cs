@@ -22,10 +22,14 @@ namespace SpaceOfMiniGames.WebApi.Authentication
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (!Request.Headers.ContainsKey(Options.TokenHeaderName))
-                return AuthenticateResult.Fail($"Missing Header For Token: {Options.TokenHeaderName}");
+            var tokenFromHeader = Request.Headers.Authorization;
+            var tokenFromQuery = Request.Query["access_token"].ToString();
 
-            var token = Request.Headers[Options.TokenHeaderName].ToString();
+            if (string.IsNullOrEmpty(tokenFromHeader) && string.IsNullOrEmpty(tokenFromQuery))
+                return AuthenticateResult.Fail($"Missing Authorization Header: {Options.TokenHeaderName}");
+
+            string token = string.IsNullOrEmpty(tokenFromHeader) ? tokenFromQuery : tokenFromHeader;
+            token = token.Replace("Bearer ", "");
 
             string json = tokenService.DecryptToken(token);
 

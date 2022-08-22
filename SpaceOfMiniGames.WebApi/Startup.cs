@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using SpaceOfMiniGames.WebApi.Authentication;
 using SpaceOfMiniGames.WebApi.Data;
 using SpaceOfMiniGames.WebApi.Data.Repositorys;
+using SpaceOfMiniGames.WebApi.Hubs;
 using SpaceOfMiniGames.WebApi.Mapping;
 using SpaceOfMiniGames.WebApi.Models.Interfaces;
 using SpaceOfMiniGames.WebApi.Services;
@@ -85,6 +86,8 @@ namespace SpaceOfMiniGames.WebApi
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            services.AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -97,11 +100,12 @@ namespace SpaceOfMiniGames.WebApi
                 c.DisplayRequestDuration();
             });
 
-            app.UseRouting();
-
             app.UseCors(x => x.AllowAnyHeader()
                                 .AllowAnyMethod()
-                                .AllowAnyOrigin());
+                                .WithOrigins("http://localhost:3000")
+                                .AllowCredentials());
+
+            app.UseRouting();            
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -109,6 +113,7 @@ namespace SpaceOfMiniGames.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<GameHub>("/game");
             });
         }
     }
