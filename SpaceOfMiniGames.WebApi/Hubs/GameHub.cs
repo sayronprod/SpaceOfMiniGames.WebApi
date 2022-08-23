@@ -26,5 +26,15 @@ namespace SpaceOfMiniGames.WebApi.Hubs
         {
             await Clients.Others.ReceiveGameData(data);
         }
+
+        public async Task ConnectToGame()
+        {
+            await Clients.Others.NewUserConnectedToGame();
+        }
+
+        public async Task SendNewBackground(object data)
+        {
+            await Clients.Others.ReceiveNewBackground(data);
+        }
     }
 }

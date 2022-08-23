@@ -87,7 +87,10 @@ namespace SpaceOfMiniGames.WebApi
                 c.IncludeXmlComments(xmlPath);
             });
 
-            services.AddSignalR();
+            services.AddSignalR(x =>
+            {
+                x.MaximumReceiveMessageSize = 5242880;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -102,10 +105,10 @@ namespace SpaceOfMiniGames.WebApi
 
             app.UseCors(x => x.AllowAnyHeader()
                                 .AllowAnyMethod()
-                                .WithOrigins("http://localhost:3000")
+                                .WithOrigins("http://localhost:3000", "http://192.168.3.2:3000", "http://192.168.3.3:3000")
                                 .AllowCredentials());
 
-            app.UseRouting();            
+            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();

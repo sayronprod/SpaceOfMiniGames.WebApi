@@ -4,5 +4,7 @@
     {
         public Task ReceiveMessage(string message);
         public Task ReceiveGameData(object data);
+        public Task NewUserConnectedToGame();
+        public Task ReceiveNewBackground(object data);
     }
 }
